@@ -1,0 +1,124 @@
+[gd_scene load_steps=7 format=3 uid="uid://bgeb387aianmf"]
+
+[ext_resource type="Script" path="res://splash/splash.gd" id="1_btkvt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s7mnh"]
+albedo_color = Color(0.0156863, 0.4, 1, 1)
+metallic = 1.0
+roughness = 0.46
+
+[sub_resource type="TorusMesh" id="TorusMesh_ymggo"]
+material = SubResource("StandardMaterial3D_s7mnh")
+
+[sub_resource type="Animation" id="Animation_tu3jr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_uhav8"]
+resource_name = "spin"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(1.5708, -1.5708, 0), Vector3(3.14159, 0, 0), Vector3(1.5708, -1.5708, 0), Vector3(0, 0, 0)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1, 2, 3, 4.0001),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"values": [{
+"args": [25],
+"method": &"update_progress"
+}, {
+"args": [50],
+"method": &"update_progress"
+}, {
+"args": [75],
+"method": &"update_progress"
+}, {
+"args": [],
+"method": &"change_scene"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_m6gwa"]
+_data = {
+"RESET": SubResource("Animation_tu3jr"),
+"spin": SubResource("Animation_uhav8")
+}
+
+[node name="Splash" type="Node3D"]
+script = ExtResource("1_btkvt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_ymggo")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_m6gwa")
+}
+autoplay = "spin"
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -99.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
