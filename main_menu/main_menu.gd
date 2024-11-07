@@ -12,5 +12,5 @@ func _process(delta):
 
 
 func _on_button_play_pressed():
-	SceneTree.change_scene_to_file("res://quiz.tscn")
+	get_tree().change_scene_to_file("res://quiz.tscn")
 	pass # Replace with function body.
